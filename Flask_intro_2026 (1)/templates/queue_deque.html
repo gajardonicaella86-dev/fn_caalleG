@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+
+{% block content %}
+<p class="eyebrow">Programming Activity 07</p>
+<h1>Queues and Deques ♡</h1>
+
+<section class="panel">
+
+    <!-- INPUT -->
+    <h2>Enter Numbers</h2>
+    <p class="small">
+        Enter numbers separated by commas.
+        Example: 10, 20, 30, 40, 50
+    </p>
+
+    <input
+        id="numbers"
+        placeholder="10, 20, 30, 40, 50"
+    >
+
+    <div class="item-list">
+        <button onclick="execute()">Execute</button>
+        <button onclick="clearAll()">Clear All</button>
+    </div>
+
+
+    <hr>
+
+
+    <!-- STANDARD QUEUE -->
+    <h2>Standard Queue</h2>
+    <p class="small">FIFO: First In, First Out</p>
+
+    <div id="queueDisplay" class="item-list"></div>
+    <div id="queueResult" class="result">
+        Enter numbers and click Execute.
+    </div>
+
+
+    <hr>
+
+
+    <!-- DEQUE -->
+    <h2>Double-Ended Queue (Deque)</h2>
+    <p class="small">Add or remove elements from both ends.</p>
+
+    <div id="dequeDisplay" class="item-list"></div>
+    <div id="dequeResult" class="result">
+        Enter numbers and click Execute.
+    </div>
+
+
+    <hr>
+
+
+    <!-- CIRCULAR QUEUE -->
+    <h2>Circular Queue</h2>
+    <p class="small">FIFO with a fixed capacity of 5.</p>
+
+    <div id="circularDisplay" class="item-list"></div>
+    <div id="circularResult" class="result">
+        Enter numbers and click Execute.
+    </div>
+
+</section>
+
+
+<script>
+
+/* =========================
+   EXECUTE ALL
+   ========================= */
+
+function execute() {
+
+    let input = document.getElementById("numbers").value;
+
+    // Convert input into numbers
+    let numbers = input
+        .split(",")
+        .map(x => x.trim())
+        .filter(x => x !== "")
+        .map(Number);
+
+    // Check if input contains valid numbers
+    if (numbers.length === 0 || numbers.some(isNaN)) {
+
+        alert("Please enter valid numbers separated by commas.");
+        return;
+    }
+
+
+    /* =========================
+       STANDARD QUEUE
+       ========================= */
+
+    let queue = [...numbers];
+
+    let removedQueue = queue.shift();
+
+    display(
+        queue,
+        "queueDisplay",
+        "queueResult",
+        "Queue",
+        "Dequeued: " + removedQueue
+    );
+
+
+    /* =========================
+       DEQUE
+       ========================= */
+
+    let deque = [...numbers];
+
+    let front = deque.shift();
+    let rear = deque.pop();
+
+    display(
+        deque,
+        "dequeDisplay",
+        "dequeResult",
+        "Deque",
+        "Removed Front: " + front +
+        " | Removed Rear: " + rear
+    );
+
+
+    /* =========================
+       CIRCULAR QUEUE
+       ========================= */
+
+    let maxSize = 5;
+    let circular = numbers.slice(0, maxSize);
+
+    let removedCircular = circular.shift();
+
+    display(
+        circular,
+        "circularDisplay",
+        "circularResult",
+        "Circular Queue",
+        "Dequeued: " + removedCircular
+    );
+}
+
+
+/* =========================
+   DISPLAY
+   ========================= */
+
+function display(items, displayId, resultId, name, message) {
+
+    let displayBox =
+        document.getElementById(displayId);
+
+    let result =
+        document.getElementById(resultId);
+
+    displayBox.replaceChildren();
+
+
+    items.forEach(value => {
+
+        let item =
+            document.createElement("span");
+
+        item.className = "item";
+        item.textContent = value;
+
+        displayBox.appendChild(item);
+    });
+
+
+    result.textContent =
+        message + " | " +
+        name + " size: " +
+        items.length;
+}
+
+
+/* =========================
+   CLEAR
+   ========================= */
+
+function clearAll() {
+
+    document.getElementById("numbers").value = "";
+
+    document.getElementById("queueDisplay").replaceChildren();
+    document.getElementById("dequeDisplay").replaceChildren();
+    document.getElementById("circularDisplay").replaceChildren();
+
+    document.getElementById("queueResult").textContent =
+        "Enter numbers and click Execute.";
+
+    document.getElementById("dequeResult").textContent =
+        "Enter numbers and click Execute.";
+
+    document.getElementById("circularResult").textContent =
+        "Enter numbers and click Execute.";
+}
+
+</script>
+
+{% endblock %}
